@@ -3,6 +3,8 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js')
 const { notDeepEqual } = require('node:assert')
 const fs = require('node:fs')
 const { writeToFile, deleteFile, clearFile, readFile } = require('../utils/fileUtils')
+const convertUtils = require('../utils/converter')
+const client = require('rest/client')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -110,11 +112,16 @@ module.exports = {
             }
         } else if (interaction.options.getSubcommand() === 'lägg_till') {
             
+            if (!fs.existsSync(`./messages/${interaction.options.get('namn').value}`)) {
+                interaction.reply(`Hittade inget meddelande med namnet "${interactio.options.get('namn').value}"`)
+                return
+            }
+
             const message_id = readFile(`./messages/${interaction.options.get('namn').value}/message.txt`)
 
             const channel_id = readFile(`./messages/${interaction.options.get('namn').value}/channel.txt`)
-            
-            interaction.channel.messages.fetch(message_id).then(message => {
+            console.log(client.channels)
+            interaction.client.channels.cache.get(channel_id).messages.fetch(message_id).then(message => {
                 if (message.components.length == 0) {
                     const row = new MessageActionRow()
                         .addComponents(
@@ -126,7 +133,12 @@ module.exports = {
                         )
                     message.edit({components: [row]})
                 } else {
+                    
                     let components = message.components
+                    console.log(components)
+                    if (components[components.length-1].components.length == 5) {
+                        components.push(new MessageActionRow())
+                    }
                     components[components.length-1].addComponents(
                         new MessageButton()
                             .setStyle('PRIMARY')
@@ -142,10 +154,29 @@ module.exports = {
             interaction.reply({ content: `Lade till reaktionen "${interaction.options.get('titel').value}" på meddelandet "${interaction.options.get('namn').value}"`, ephemeral: true})
         } else if (interaction.options.getSubcommand() === 'ta_bort') {
 
+            if (!fs.existsSync(`./messages/${interaction.options.get('namn').value}/message.txt`)) {
+                interaction.reply(`Hittade inget meddelande med namnet "${interactio.options.get('namn').value}"`)
+                return
+            }
+
             const message_id = readFile(`./messages/${interaction.options.get('namn').value}/message.txt`)
-
-            interaction.channel.messages.fetch(message_id).then(message => {
-
+            const channel_id = readFile(`./messages/${interaction.options.get('namn').value}/channel.txt`)
+            interaction.client.channels.cache.get(channel_id).messages.fetch(message_id).then(message => {
+                if (message.components.length == 0) {
+                    interaction.reply("Meddelandet har inga reaktioner.")
+                    return
+                } else {
+                    let newComponents = convertUtils.rowsToList(message.components)
+                    for (let i = 0; i < newComponents.length; i++) {
+                        if (newComponents[i].customId === interaction.options.get('roll').value) {
+                            newComponents.splice(i, 1)
+                            interaction.reply({content: `Tog bort rollen <@&${interaction.options.get('roll').value}>`, ephemeral: true})
+                            break
+                        } 
+                    }
+                    let com = convertUtils.listToRows(newComponents)
+                    message.edit({components: com})
+                }
             })
 
         }

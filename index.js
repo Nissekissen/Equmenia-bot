@@ -1,6 +1,7 @@
 const fs = require('node:fs')
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
+const CronJob = require('cron').CronJob
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 client.commands = new Collection();
@@ -27,7 +28,10 @@ const loadEvents = () => {
 	}
 }
 
-
+let job = new CronJob('00 33 17 * * *', () => {
+	console.log("Changed status")
+}, null, true, 'Europe/Stockholm')
+job.start()
 loadCommands();
 loadEvents();
 
