@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js')
+const { MessageEmbed, MessageButton, MessageActionRow, Permissions } = require('discord.js')
 const { notDeepEqual } = require('node:assert')
 const fs = require('node:fs')
 const { writeToFile, deleteFile, clearFile, readFile } = require('../utils/fileUtils')
@@ -58,6 +58,7 @@ module.exports = {
                     option.setName('roll').setDescription('Rollen som ska tas bort').setRequired(true)
                 )
         ),
+    permissions: [ Permissions.FLAGS.ADMINISTRATOR ],
     async execute(interaction) {
         //console.log(interaction.options)
         if (interaction.options.getSubcommand() === 'skapa') {
