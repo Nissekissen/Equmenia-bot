@@ -1,0 +1,12 @@
+//CONFIG FILE
+//This is where you place your token, application ID and the guild ID for the test server.
+//
+//clientId: Application ID, Found at the developer portal (https://discord.com/developers/applications)
+//guildId: Test server Guild ID
+//token: Bot token. Also found at the developer portal. Note: DO NOT share the bot token.
+
+{
+    "clientId": "BOT_ID",
+    "guildId": "DEV_SERVER_ID",
+    "token": "BOT_TOKEN_GOES_HERE"
+}
