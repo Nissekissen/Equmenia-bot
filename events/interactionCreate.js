@@ -10,7 +10,7 @@ module.exports = {
 	        if (!command) return;
 
 	        try {
-                if (command.permissions && command.permissions.length > 0) {
+                if (!command.permissions && command.permissions.length > 0) {
                     if (interaction.member.permissions.has(command.permissions)) return await interaction.reply({ content: 'Du har inte behörighet att använda det här kommandot', ephemeral: true })
                 }
 
