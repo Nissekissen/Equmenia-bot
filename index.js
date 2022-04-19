@@ -1,7 +1,8 @@
 const fs = require('node:fs')
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, Intents, MessageEmbed, EmbedFooterData } = require('discord.js');
 const { token } = require('./config.json');
 const CronJob = require('cron').CronJob
+const axios = require('axios')
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 client.commands = new Collection();
@@ -28,8 +29,24 @@ const loadEvents = () => {
 	}
 }
 
-let job = new CronJob('00 33 17 * * *', () => {
-	console.log("Changed status")
+let job = new CronJob('00 00 06 * * *', () => {
+	axios.get('https://www.bibeln.se/pren/syndikering.jsp')
+		.then((response) => {
+			console.log(response)
+			let bibelordData = response.data.toString().split('<p>')[1]
+			let bibelord = bibelordData.split('</p>')[0]
+			let versData = response.data.toString().split('">')[2]
+			let vers = versData.split('</a>')[0]
+			client.channels.cache.get('405739420285665284').send({ embeds: [
+				new MessageEmbed()
+					.setTitle('Dagens Bibelord')
+					.setDescription(bibelord)
+					.setFooter(vers)
+					.setColor('#8C3C8D')
+					.setThumbnail('https://i.imgur.com/iUUOiu9.png')
+					.setTimestamp(Date.now())
+			] })
+		})
 }, null, true, 'Europe/Stockholm')
 job.start()
 loadCommands();
