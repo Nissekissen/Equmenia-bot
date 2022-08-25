@@ -4,3 +4,7 @@ buttons
 config.json
 package.json
 package-lock.json
+logger/index.html
+logger/main.css
+logger/script.js
+logger

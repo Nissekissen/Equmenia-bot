@@ -114,7 +114,7 @@ module.exports = {
         } else if (interaction.options.getSubcommand() === 'lägg_till') {
             
             if (!fs.existsSync(`./messages/${interaction.options.get('namn').value}`)) {
-                interaction.reply(`Hittade inget meddelande med namnet "${interactio.options.get('namn').value}"`)
+                interaction.reply(`Hittade inget meddelande med namnet "${interaction.options.get('namn').value}"`)
                 return
             }
 

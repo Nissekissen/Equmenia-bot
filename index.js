@@ -35,6 +35,7 @@ let job = new CronJob('00 00 06 * * *', () => {
 			console.log(response)
 			let bibelordData = response.data.toString().split('<p>')[1]
 			let bibelord = bibelordData.split('</p>')[0]
+			bibelord = bibelord.replace('<br/>', "\n")
 			let versData = response.data.toString().split('">')[2]
 			let vers = versData.split('</a>')[0]
 			client.channels.cache.get('405739420285665284').send({ embeds: [

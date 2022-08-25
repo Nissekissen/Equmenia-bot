@@ -13,6 +13,7 @@ module.exports = {
 			console.log(response)
 			let bibelordData = response.data.toString().split('<p>')[1]
 			let bibelord = bibelordData.split('</p>')[0]
+			bibelord = bibelord.replace('<br/>', "\n")
 			let versData = response.data.toString().split('">')[2]
 			let vers = versData.split('</a>')[0]
 			interaction.reply({ content: 'Här är dagens bibelord:',embeds: [
