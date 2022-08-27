@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed, MessageButton, MessageActionRow, Permissions } = require('discord.js')
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js')
 const { notDeepEqual } = require('node:assert')
 const fs = require('node:fs')
 const { writeToFile, deleteFile, clearFile, readFile } = require('../utils/fileUtils')
@@ -58,43 +58,16 @@ module.exports = {
                     option.setName('roll').setDescription('Rollen som ska tas bort').setRequired(true)
                 )
         ),
-    permissions: [ Permissions.FLAGS.ADMINISTRATOR ],
     async execute(interaction) {
         //console.log(interaction.options)
         if (interaction.options.getSubcommand() === 'skapa') {
-            const embed = new MessageEmbed()
+            const embed = new EmbedBuilder()
                 .setTitle(interaction.options.get('namn').value)
                 .setDescription(interaction.options.get('innehåll').value)
                 .setColor('#8C3C8D')
             
             console.log(interaction.options.get('kanal').value)
             
-            /*
-            
-            [
-                {
-                    name: "something",
-                    channel: "channel-id"
-                    message: "message-id"
-                    reactions: [
-                        {
-                            name: "something2"
-                            emoji: "some-emoji"
-                            role: "role-id"
-                        },
-                        {
-                            name: "something3"
-                            emoji: "some-emoji2"
-                            role: "role-id2"
-                        } 
-                    ]
-                }
-            ]
-            
-            
-            */
-            
-
             const channel = interaction.client.channels.cache.get(interaction.options.get('kanal').value)
             
 
@@ -124,10 +97,10 @@ module.exports = {
             console.log(client.channels)
             interaction.client.channels.cache.get(channel_id).messages.fetch(message_id).then(message => {
                 if (message.components.length == 0) {
-                    const row = new MessageActionRow()
+                    const row = new ActionRowBuilder()
                         .addComponents(
-                            new MessageButton()
-                                .setStyle('PRIMARY')
+                            new ButtonBuilder()
+                                .setStyle(ButtonStyle.Primary)
                                 .setEmoji(interaction.options.get('emoji').value)
                                 .setCustomId(interaction.options.get('roll').value)
                                 .setLabel(interaction.options.get('titel').value)
@@ -138,11 +111,11 @@ module.exports = {
                     let components = message.components
                     console.log(components)
                     if (components[components.length-1].components.length == 5) {
-                        components.push(new MessageActionRow())
+                        components.push(new ActionRowBuilder())
                     }
                     components[components.length-1].addComponents(
-                        new MessageButton()
-                            .setStyle('PRIMARY')
+                        new ButtonBuilder()
+                            .setStyle(ButtonStyle.Primary)
                             .setEmoji(interaction.options.get('emoji').value)
                             .setCustomId(interaction.options.get('roll').value)
                             .setLabel(interaction.options.get('titel').value)

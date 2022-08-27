@@ -1,9 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, InteractionType } = require("discord.js");
 
 module.exports = {
     name: 'interactionCreate',
     async execute(interaction) {
-        if (interaction.isCommand()) {
+        if (interaction.type === InteractionType.ApplicationCommand) {
 
 	        const command = interaction.client.commands.get(interaction.commandName);
 

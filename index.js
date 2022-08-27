@@ -1,10 +1,10 @@
 const fs = require('node:fs')
-const { Client, Collection, Intents, MessageEmbed, EmbedFooterData } = require('discord.js');
+const { Client, Collection, EmbedBuilder, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 const CronJob = require('cron').CronJob
 const axios = require('axios')
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 
 const loadCommands = () => {
@@ -39,10 +39,10 @@ let job = new CronJob('00 00 06 * * *', () => {
 			let versData = response.data.toString().split('">')[2]
 			let vers = versData.split('</a>')[0]
 			client.channels.cache.get('405739420285665284').send({ embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setTitle('Dagens Bibelord')
 					.setDescription(bibelord)
-					.setFooter(vers)
+					.setFooter({text: vers})
 					.setColor('#8C3C8D')
 					.setThumbnail('https://i.imgur.com/iUUOiu9.png')
 					.setTimestamp(Date.now())
