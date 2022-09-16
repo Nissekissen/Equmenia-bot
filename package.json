@@ -1,0 +1,28 @@
+{
+  "name": "equmenia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "deployl": "node deploy-local.js",
+    "deployg": "node deploy-global.js",
+    "run": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/rest": "^0.3.0",
+    "axios": "^0.26.1",
+    "cron": "^1.8.2",
+    "discord-api-types": "^0.31.1",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15",
+    "rest": "^2.0.0",
+    "sequelize": "^6.19.0",
+    "sqlite3": "^5.0.3"
+  }
+}
