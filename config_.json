@@ -1,0 +1,7 @@
+//För att använda den här filen måste du byta namn på den till "config.json"
+
+{
+  "clientId": "BOTTENS_ID", // Bottens egna ID. För att få hjälp att hitta det, kolla in den här länken: https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
+  "guildId": "SERVER_ID",  // ID:t till servern du ska ha botten i. Behövs bara om du använder deploy-local.js
+  "token": "BOT_TOKEN" // Din token till botten. Dela inte med dig av den. Du hittar den på Discord Developer Portal.
+}
