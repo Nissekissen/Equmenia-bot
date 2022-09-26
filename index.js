@@ -38,7 +38,7 @@ let job = new CronJob('00 00 06 * * *', () => {
 			bibelord = bibelord.replace('<br/>', "\n")
 			let versData = response.data.toString().split('">')[2]
 			let vers = versData.split('</a>')[0]
-			client.channels.cache.get('405739420285665284').send({ embeds: [
+			client.channels.cache.get('936214759915814954').send({ embeds: [
 				new EmbedBuilder()
 					.setTitle('Dagens Bibelord')
 					.setDescription(bibelord)
