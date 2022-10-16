@@ -5,6 +5,7 @@ const fs = require('node:fs')
 const { writeToFile, deleteFile, clearFile, readFile } = require('../utils/fileUtils')
 const convertUtils = require('../utils/converter')
 const client = require('rest/client')
+const { logToFile } = require('../utils/consoleLogging')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -59,14 +60,12 @@ module.exports = {
                 )
         ),
     async execute(interaction) {
-        //console.log(interaction.options)
         if (interaction.options.getSubcommand() === 'skapa') {
+            logToFile(interaction.user.name + ' ran command "/roller skapa"')
             const embed = new EmbedBuilder()
                 .setTitle(interaction.options.get('namn').value)
                 .setDescription(interaction.options.get('innehåll').value)
                 .setColor('#8C3C8D')
-            
-            console.log(interaction.options.get('kanal').value)
             
             const channel = interaction.client.channels.cache.get(interaction.options.get('kanal').value)
             
@@ -85,7 +84,7 @@ module.exports = {
                 await interaction.reply({ content: `A message with the name "${interaction.options.get('namn').value}" already exists!`, ephemeral: true })
             }
         } else if (interaction.options.getSubcommand() === 'lägg_till') {
-            
+            logToFile(interaction.user.name + ' ran command "/roller lägg_till"')
             if (!fs.existsSync(`./messages/${interaction.options.get('namn').value}`)) {
                 interaction.reply(`Hittade inget meddelande med namnet "${interaction.options.get('namn').value}"`)
                 return
@@ -94,7 +93,6 @@ module.exports = {
             const message_id = readFile(`./messages/${interaction.options.get('namn').value}/message.txt`)
 
             const channel_id = readFile(`./messages/${interaction.options.get('namn').value}/channel.txt`)
-            console.log(client.channels)
             interaction.client.channels.cache.get(channel_id).messages.fetch(message_id).then(message => {
                 if (message.components.length == 0) {
                     const row = new ActionRowBuilder()
@@ -109,7 +107,6 @@ module.exports = {
                 } else {
                     
                     let components = message.components
-                    console.log(components)
                     if (components[components.length-1].components.length == 5) {
                         components.push(new ActionRowBuilder())
                     }
@@ -127,7 +124,7 @@ module.exports = {
 
             interaction.reply({ content: `Lade till reaktionen "${interaction.options.get('titel').value}" på meddelandet "${interaction.options.get('namn').value}"`, ephemeral: true})
         } else if (interaction.options.getSubcommand() === 'ta_bort') {
-
+            logToFile(interaction.user.name + ' ran command "/roller ta_bort"')
             if (!fs.existsSync(`./messages/${interaction.options.get('namn').value}/message.txt`)) {
                 interaction.reply(`Hittade inget meddelande med namnet "${interactio.options.get('namn').value}"`)
                 return

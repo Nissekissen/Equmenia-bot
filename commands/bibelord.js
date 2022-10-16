@@ -1,12 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const axios = require('axios')
 const { Permissions, EmbedBuilder } = require('discord.js')
+const { logToFile } = require('../utils/consoleLogging')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('bibelord')
         .setDescription('Visar dagens bibelord'),
     async execute(interaction) {
+		logToFile(interaction.user.name + ' ran command "/bibelord"')
         axios.get('https://www.bibeln.se/pren/syndikering.jsp')
 		.then((response) => {
 			let bibelordData = response.data.toString().split('<p>')[1]
