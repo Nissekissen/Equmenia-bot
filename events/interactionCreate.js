@@ -165,6 +165,24 @@ module.exports = {
                 const activeChannels = JSON.parse(fs.readFileSync('./channels.json'));
                 activeChannels.channels.find(v => v.channelId == interaction.customId.split("-")[3]).intro = true;
                 fs.writeFileSync('./channels.json', JSON.stringify(activeChannels));
+            } else if (!isNaN(interaction.customId)) {
+                if (interaction.member.roles.cache.some(r => r.id === interaction.customId)) {
+                    const role = interaction.message.guild.roles.cache.find(r => r.id === interaction.customId)
+                    await interaction.member.roles.remove(role)
+                
+                    await interaction.reply({
+                        content: `Tog bort rollen <@&${role.id}> från <@${interaction.user.id}>`,
+                        ephemeral: true
+                    })
+                } else {
+                    const role = interaction.message.guild.roles.cache.find(r => r.id === interaction.customId)
+                    await interaction.member.roles.add(role)
+                    
+                    await interaction.reply({
+                        content: `Gav <@${interaction.user.id}> rollen <@&${role.id}>`,
+                        ephemeral: true
+                    })
+                }
             }
         }
     }
