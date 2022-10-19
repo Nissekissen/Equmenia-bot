@@ -37,7 +37,7 @@ module.exports = {
                             value: games.fortnite
                         },
                         {
-                            label: 'roblox',
+                            label: 'Roblox',
                             description: 'Välj om du brukar spela roblox',
                             value: games.roblox
                         },

@@ -89,6 +89,15 @@ module.exports = {
                 const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[3]);
                 await form.execute(interaction, channel);
             } else if (interaction.customId.startsWith('form-roles')) {
+                interaction.component.options.forEach(async option => {
+                    if (!isNaN(option.value)) {
+                        const role = interaction.message.guild.roles.cache.find(r => r.id == option.value);
+                        if (role != undefined && interaction.values.findIndex(v => v == role.id) == -1) {
+                            await interaction.member.roles.remove(role);
+                            console.log(role.name);
+                        }
+                    }
+                })
                 interaction.values.forEach(async value => {
                     if (!isNaN(value)) {
                         const role = interaction.message.guild.roles.cache.find(r => r.id === value)
@@ -131,7 +140,7 @@ module.exports = {
                 embed.addData(embed)
                 if (!interaction.member.dmChannel) await interaction.member.createDM();
                 await interaction.member.dmChannel.send({ embeds: [embed] })
-
+                
             } else if (interaction.customId.startsWith('form-deny')) {
                 const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[2]);
 
@@ -143,6 +152,14 @@ module.exports = {
                 const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
                 activeChannels.channels.splice(index, 1);
                 fs.writeFileSync('./channels.json', JSON.stringify(activeChannels));
+
+                const embed = new EmbedBuilder()
+                    .setTitle('Equmenia Gaming')
+                    .setDescription('Ditt formulär har blivit nekat. Kontakta en ledare för mer information.')
+                embed.addData(embed)
+                if (!interaction.member.dmChannel) await interaction.member.createDM();
+                await interaction.member.dmChannel.send({ embeds: [embed] })
+
             } else if (interaction.customId.startsWith('form-rewrite-intro')) {
                 const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[3]);
                 const messages = channel.messages.cache.last(2);
