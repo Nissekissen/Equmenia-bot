@@ -58,8 +58,7 @@ module.exports = {
                     option.setName('roll').setDescription('Rollen som ska tas bort').setRequired(true)
                 )
         ),
-    async execute(interaction) {
-        //console.log(interaction.options)
+    execute: async interaction => {
         if (interaction.options.getSubcommand() === 'skapa') {
             const embed = new EmbedBuilder()
                 .setTitle(interaction.options.get('namn').value)

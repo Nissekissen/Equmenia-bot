@@ -9,7 +9,6 @@ client.commands = new Collection();
 
 const loadCommands = () => {
 	const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-    console.log(commandFiles)
 	for (const file of commandFiles) {
 		const command = require(`./commands/${file}`);
 		client.commands.set(command.data.name, command);
@@ -32,7 +31,6 @@ const loadEvents = () => {
 let job = new CronJob('00 00 06 * * *', () => {
 	axios.get('https://www.bibeln.se/pren/syndikering.jsp')
 		.then((response) => {
-			console.log(response)
 			let bibelordData = response.data.toString().split('<p>')[1]
 			let bibelord = bibelordData.split('</p>')[0]
 			bibelord = bibelord.replace('<br/>', "\n")

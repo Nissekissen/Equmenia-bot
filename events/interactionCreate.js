@@ -1,6 +1,7 @@
-const { IntegrationApplication, InteractionType, InteractionCollector, ChannelType, PermissionsBitField, EmbedBuilder } = require("discord.js");
+const { IntegrationApplication, InteractionType, InteractionCollector, ChannelType, PermissionsBitField, EmbedBuilder, ActivityType } = require("discord.js");
 const fs = require('fs')
-const { lärjungar } = require('../roles.json')
+const { lärjungar } = require('../roles.json');
+const logger = require("../utils/logger");
 require('../utils/embedData')
 
 module.exports = {
@@ -8,15 +9,18 @@ module.exports = {
     async execute(interaction) {
         if (interaction.type === InteractionType.ApplicationCommand) {
             const command = interaction.client.commands.get(interaction.commandName);
-
+            //Temp fix
+            await interaction.client.user.setPresence({ activities: [{ name: 'Bible: Audio Book' , type: ActivityType.Listening}], status: 'online' })
             if (!command) return;
             try {
                 await command.execute(interaction);
+                logger.log(`${interaction.member.user.username} ran the command ${command.data.name}`)
             } catch (error) {
                 await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
-                console.log(error);
+                logger.log(error);
             }
         } else if (interaction.type === InteractionType.MessageComponent) {
+            logger.log(`${interaction.member.user.username} pressed a button.`)
             let channel = interaction.guild.channels.cache.find(channel => channel.name == `${interaction.member.user.username}`)
             if (interaction.customId.startsWith('form-start')) {
                 const region = require('../form/region');

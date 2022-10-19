@@ -1,9 +1,11 @@
 const fs = require('fs')
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityType } = require('discord.js')
 
 module.exports = {
     name: 'messageCreate',
     async execute (interaction) {
+        //temp fix
+        await client.user.setPresence({ activities: [{ name: 'Bible: Audio Book' , type: ActivityType.Listening}], status: 'online' });
         if (interaction.member.id === interaction.client.user.id) return;
         const activeChannels = JSON.parse(fs.readFileSync(`./channels.json`));
         const returnChannels = activeChannels;

@@ -21,7 +21,7 @@ module.exports = {
                 .setDescription('Meddelandets innehåll.')
                 .setRequired(true)    
         ),
-    async execute(interaction) {
+    execute: async interaction => {
         const embed = new EmbedBuilder()
             .setTitle(interaction.options.getString('titel'))
             .setDescription(interaction.options.getString('innehåll'))
