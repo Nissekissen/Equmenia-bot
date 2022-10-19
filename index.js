@@ -1,10 +1,19 @@
 const fs = require('node:fs')
-const { Client, Collection, EmbedBuilder, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, EmbedBuilder, GatewayIntentBits, ActivityType } = require('discord.js');
 const { token } = require('./config.json');
 const CronJob = require('cron').CronJob
 const axios = require('axios')
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages],
+	presence: {
+		status: 'online',
+		activities: [{
+			name: 'Bible: Audio Book',
+			type: ActivityType.Listening
+		}]
+	}
+});
 client.commands = new Collection();
 
 const loadCommands = () => {

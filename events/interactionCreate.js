@@ -9,8 +9,6 @@ module.exports = {
     async execute(interaction) {
         if (interaction.type === InteractionType.ApplicationCommand) {
             const command = interaction.client.commands.get(interaction.commandName);
-            //Temp fix
-            await interaction.client.user.setPresence({ activities: [{ name: 'Bible: Audio Book' , type: ActivityType.Listening}], status: 'online' })
             if (!command) return;
             try {
                 await command.execute(interaction);
