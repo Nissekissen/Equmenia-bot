@@ -4,7 +4,7 @@ const { token } = require('./config.json');
 const CronJob = require('cron').CronJob
 const axios = require('axios')
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages] });
 client.commands = new Collection();
 
 const loadCommands = () => {
