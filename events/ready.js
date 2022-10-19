@@ -1,3 +1,4 @@
+const { ActivityType } = require('discord.js')
 const Tags = require('../index.js')
 
 module.exports = {
@@ -5,7 +6,7 @@ module.exports = {
     once: true,
     execute(client) {
         console.log('Bot is ready!')
-        client.user.setPresence({ activities: [{ name: 'Jesaja 28:10' , type: 'WATCHING'}], status: 'online' })
+        client.user.setPresence({ activities: [{ name: 'to Bible: Audio Book' , type: ActivityType.Listening}], status: 'online' })
         console.log("Set status")
     }
 }
