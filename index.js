@@ -1,11 +1,20 @@
 const fs = require('node:fs')
-const { Client, Collection, EmbedBuilder, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, EmbedBuilder, GatewayIntentBits, ActivityType } = require('discord.js');
 const { token } = require('./config.json');
 const CronJob = require('cron').CronJob
 const axios = require('axios');
 const { logToFile } = require('./utils/consoleLogging');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages],
+	presence: {
+		status: 'online',
+		activities: [{
+			name: 'Bible: Audio Book',
+			type: ActivityType.Listening
+		}]
+	}
+});
 client.commands = new Collection();
 
 const loadCommands = () => {
@@ -37,7 +46,7 @@ let job = new CronJob('00 00 06 * * *', () => {
 			bibelord = bibelord.replace('<br/>', "\n")
 			let versData = response.data.toString().split('">')[2]
 			let vers = versData.split('</a>')[0]
-			client.channels.cache.get('405739420285665284').send({ embeds: [
+			client.channels.cache.get('936214759915814954').send({ embeds: [
 				new EmbedBuilder()
 					.setTitle('Dagens Bibelord')
 					.setDescription(bibelord)

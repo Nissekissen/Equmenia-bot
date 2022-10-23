@@ -6,4 +6,5 @@ logger/index.html
 logger/main.css
 logger/script.js
 logger
-.vscode
+roles.json
+channels.json

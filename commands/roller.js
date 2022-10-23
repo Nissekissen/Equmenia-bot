@@ -59,7 +59,7 @@ module.exports = {
                     option.setName('roll').setDescription('Rollen som ska tas bort').setRequired(true)
                 )
         ),
-    async execute(interaction) {
+    execute: async interaction => {
         if (interaction.options.getSubcommand() === 'skapa') {
             logToFile(interaction.user.name + ' ran command "/roller skapa"')
             const embed = new EmbedBuilder()

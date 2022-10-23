@@ -7,8 +7,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('bibelord')
         .setDescription('Visar dagens bibelord'),
-    async execute(interaction) {
-		logToFile(interaction.user.name + ' ran command "/bibelord"')
+    execute: async interaction => {
         axios.get('https://www.bibeln.se/pren/syndikering.jsp')
 		.then((response) => {
 			let bibelordData = response.data.toString().split('<p>')[1]
