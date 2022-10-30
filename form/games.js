@@ -65,6 +65,11 @@ module.exports = {
                             label: 'Rocket League',
                             description: 'Välj om du brukar spela Rocket League',
                             value: games.rocketleague
+                        },
+                        {
+                            label: 'Valorant',
+                            description: 'Välj om du brukar spela Valorant',
+                            value: games.valorant
                         }
                     )
             )
