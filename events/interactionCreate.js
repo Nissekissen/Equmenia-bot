@@ -125,7 +125,6 @@ module.exports = {
 
                 await channel.delete();
                 await interaction.reply({ content: `Medlem godkänd. Skriv \`.note <@${interaction.customId.split("-")[3]}> ${content}\` i <#${notesChannel.id}>`, ephemeral: true });
-                await interaction.message.delete();
                 const old_embed = interaction.message.embeds[0]
                 const new_embed = new EmbedBuilder()
                     .setTitle(old_embed.title)
