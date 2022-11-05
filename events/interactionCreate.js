@@ -1,4 +1,4 @@
-const { IntegrationApplication, InteractionType, InteractionCollector, ChannelType, PermissionsBitField, EmbedBuilder, ActivityType } = require("discord.js");
+const { IntegrationApplication, InteractionType, InteractionCollector, ChannelType, PermissionsBitField, EmbedBuilder, ActivityType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const fs = require('fs')
 const { lärjungar } = require('../roles.json');
 const logger = require("../utils/logger");
@@ -126,6 +126,28 @@ module.exports = {
                 await channel.delete();
                 await interaction.reply({ content: `Medlem godkänd. Skriv \`.note <@${interaction.customId.split("-")[3]}> ${content}\` i <#${notesChannel.id}>`, ephemeral: true });
                 await interaction.message.delete();
+                const old_embed = interaction.message.embeds[0]
+                const new_embed = new EmbedBuilder()
+                    .setTitle(old_embed.title)
+                    .setDescription(old_embed.description)
+                    .setFooter({ text: `Godkänt av ${interaction.member.user.username}` })
+                
+                const row = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('none')
+                            .setLabel('Avböj')
+                            .setStyle(ButtonStyle.Danger)
+                            .setDisabled(true),
+                        new ButtonBuilder()
+                            .setCustomId('none')
+                            .setLabel('Godkänn')
+                            .setStyle(ButtonStyle.Success)
+                            .setDisabled(true)
+                    )
+
+                await interaction.update({ embeds: [new_embed], components: [row] })
+
                 const activeChannels = JSON.parse(fs.readFileSync('./channels.json'));
                 const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
                 activeChannels.channels.splice(index, 1);
