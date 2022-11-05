@@ -51,7 +51,7 @@ module.exports = {
                             },
                             {
                                 id: interaction.user.id,
-                                allow: [PermissionsBitField.Flags.ViewChannel]
+                                allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages]
                             }
                         ]
                     }).then(channel => {
@@ -161,8 +161,8 @@ module.exports = {
                     .setTitle('Välkommen till Equmenia Gaming')
                     .setDescription('Välkommen till Equmenia Gamings discordserver! Du har nu blivit insläppt och har tillgång till alla kanaler! Du kan alltid meddela en online ledare om du har några frågor, alternativt fråga i någon av de passande textkanalerna. Välkommen!')
                 embed.addData(embed)
-                if (!interaction.member.dmChannel) await interaction.member.createDM();
-                await interaction.member.dmChannel.send({ embeds: [embed] })
+                if (!member.dmChannel) await member.createDM();
+                await member.dmChannel.send({ embeds: [embed] })
                 
             } else if (interaction.customId.startsWith('form-deny')) {
                 const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[2]);
@@ -180,8 +180,9 @@ module.exports = {
                     .setTitle('Equmenia Gaming')
                     .setDescription('Ditt formulär har blivit nekat. Kontakta en ledare för mer information.')
                 embed.addData(embed)
-                if (!interaction.member.dmChannel) await interaction.member.createDM();
-                await interaction.member.dmChannel.send({ embeds: [embed] })
+                const member = interaction.guild.members.cache.get(interaction.customId.split("-")[3]);
+                if (!member.dmChannel) await member.createDM();
+                await member.dmChannel.send({ embeds: [embed] })
 
             } else if (interaction.customId.startsWith('form-rewrite-intro')) {
                 const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[3]);
