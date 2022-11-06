@@ -14,10 +14,10 @@ module.exports = {
                 .setRequired(true)   
         ),
     execute: async interaction => {
-        const data = JSON.parse(fs.readFileSync(path.join(__dirname, '../roles.json')));
+        const data = JSON.parse(fs.readFileSync(path.join(__dirname, '../../roles.json')));
         const channel = interaction.options.getChannel('channel');
         data.modchannel = channel.id;
-        fs.writeFileSync(path.join(__dirname, '../roles.json'), JSON.stringify(data));
+        fs.writeFileSync(path.join(__dirname, '../../roles.json'), JSON.stringify(data));
         await interaction.reply({
             content: `Mod channel set to <#${channel.id}>`,
             ephemeral: true

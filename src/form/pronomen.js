@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
 
-const { pronouns } = require('../roles.json')
+const { pronouns } = require('../../roles.json')
 
 require('../utils/embedData')
 

@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
 require('../utils/embedData')
-const { games } = require('../roles.json')
+const { games } = require('../../roles.json')
 
 module.exports = {
     execute: async (interaction, channel) => {

@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
+    "dev": "nodemon src/index.js",
     "deployl": "node deploy/deploy-local.js",
     "deployg": "node deploy/deploy-global.js",
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
