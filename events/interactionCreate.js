@@ -130,22 +130,22 @@ module.exports = {
                     .setTitle(old_embed.title)
                     .setDescription(old_embed.description)
                     .setFooter({ text: `Godkänt av ${interaction.member.user.username}` })
-                
+                new_embed.addData(new_embed)
                 const row = new ActionRowBuilder()
                     .addComponents(
                         new ButtonBuilder()
-                            .setCustomId('none')
+                            .setCustomId('nyom')
                             .setLabel('Avböj')
                             .setStyle(ButtonStyle.Danger)
                             .setDisabled(true),
                         new ButtonBuilder()
-                            .setCustomId('none')
+                            .setCustomId('nyoom')
                             .setLabel('Godkänn')
                             .setStyle(ButtonStyle.Success)
                             .setDisabled(true)
                     )
 
-                await interaction.update({ embeds: [new_embed], components: [row] })
+                await interaction.message.edit({ embeds: [new_embed], components: [row] })
 
                 const activeChannels = JSON.parse(fs.readFileSync('./channels.json'));
                 const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
@@ -168,7 +168,27 @@ module.exports = {
 
                 await channel.delete();
                 await interaction.reply({ content: `Medlem avböjd, formulär borttaget.`, ephemeral: true })
-                await interaction.message.delete();
+                const old_embed = interaction.message.embeds[0]
+                const new_embed = new EmbedBuilder()
+                    .setTitle(old_embed.title)
+                    .setDescription(old_embed.description)
+                    .setFooter({ text: `Avböjt av ${interaction.member.user.username}` })
+                new_embed.addData(new_embed)
+                const row = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('nyom')
+                            .setLabel('Avböj')
+                            .setStyle(ButtonStyle.Danger)
+                            .setDisabled(true),
+                        new ButtonBuilder()
+                            .setCustomId('nyoom')
+                            .setLabel('Godkänn')
+                            .setStyle(ButtonStyle.Success)
+                            .setDisabled(true)
+                    )
+
+                await interaction.message.edit({ embeds: [new_embed], components: [row] })
 
                 const activeChannels = JSON.parse(fs.readFileSync('./channels.json'));
                 const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
