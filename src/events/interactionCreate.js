@@ -20,11 +20,18 @@ module.exports = {
         } else if (interaction.type === InteractionType.MessageComponent) {
             logger.log(`${interaction.member.user.username} pressed a button.`)
             let channel = interaction.guild.channels.cache.find(channel => channel.name == `${interaction.member.user.username}`)
-            if (interaction.customId.startsWith('form-start')) {
+
+            // Here is a list of all button ids:
+            // - form-start
+            // - startForm
+            // - form-cancel
+            // - 
+
+
+            if (interaction.customId.startsWith('form-start')) { // FIXED
                 const region = require('../form/region');
-                const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[2]);
-                await region.execute(interaction, channel);
-            } else if (interaction.customId.startsWith('startForm')) {
+                await region.execute(interaction, interaction.channel);
+            } else if (interaction.customId.startsWith('startForm')) { // FIXED
                 if (interaction.member.roles.cache.has(lärjungar)) {
                     return await interaction.reply({ content: 'Du kan inte fylla i det här formuläret igen.', ephemeral: true })
                 }
@@ -63,8 +70,8 @@ module.exports = {
                     return await interaction.reply({ content: `Du har redan ett öppet formulär: <#${id}>`, ephemeral: true });
                 }
 
-            } else if (interaction.customId.startsWith('form-cancel')) {
-                const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[2]);
+            } else if (interaction.customId.startsWith('form-cancel')) { // FIXED
+                const channel = interaction.channel;
                 await channel.delete();
                 const activeChannels = JSON.parse(fs.readFileSync('./channels.json'));
                 const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
@@ -90,7 +97,7 @@ module.exports = {
                 const form = require(`../form/${formName}`);
                 const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[3]);
                 await form.execute(interaction, channel);
-            } else if (interaction.customId.startsWith('form-roles')) {
+            } else if (interaction.customId.startsWith('form-roles')) { // FIXED
                 interaction.component.options.forEach(async option => {
                     if (!isNaN(option.value)) {
                         const role = interaction.message.guild.roles.cache.find(r => r.id == option.value);
@@ -110,15 +117,24 @@ module.exports = {
 
                 await interaction.deferUpdate();
             } else if (interaction.customId.startsWith('form-submit')) {
-                const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[2]);
+                // [DONE]channel_id - message_id
+
+                const channel = interaction.guild.channels.cache.get(interaction.channel.id);
                 const data = channel.messages.fetch(interaction.customId.split("-")[3]).then(async content => {
                     const submit = require('../form/submit');
                     await submit.execute(interaction, channel, content.content, content);
                 })
 
-            } else if (interaction.customId.startsWith('form-accept')) {
-                const channel = interaction.guild.channels.cache.get(interaction.customId.split("-")[2]);
-                const content = channel.messages.cache.get(interaction.customId.split("-")[4]);
+            } else if (interaction.customId.startsWith('form-accept')) { // FIXED
+                // [DONE]channel_id - [DONE]member_id - [DONE]message_id
+                const memberName = interaction.message.embeds[0].description.split('`')[1]
+                const member = interaction.guild.members.cache.find(user => user.username === memberName)
+
+                const channelData = JSON.parse(fs.readFileSync('./channels.json'));
+                const userData = activeChannels.channels.findIndex(data => data.userId == member.id);
+
+                const channel = interaction.guild.channels.cache.get(userData.channelId);
+                const content = interaction.message.embeds[0].description.split('\n')[2];
                 const notesChannel = interaction.guild.channels.cache.find(c => c.name === "notes");
                 //await notesChannel.send(`.note <@${interaction.customId.split("-")[3]}> ${content}`);
                 //await notesChannel.send(`/notes user:@REEEEEEEboi#6089`);
@@ -152,8 +168,6 @@ module.exports = {
                 const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
                 activeChannels.channels.splice(index, 1);
                 fs.writeFileSync('./channels.json', JSON.stringify(activeChannels));
-
-                const member = interaction.guild.members.cache.get(interaction.customId.split("-")[3]);
                 const role = interaction.guild.roles.cache.get(lärjungar);
                 if (role != undefined) await member.roles.add(role);
 
