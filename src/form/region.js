@@ -1,5 +1,5 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, SelectMenuBuilder, ButtonStyle } = require('discord.js');
-const { regions } = require('../roles.json')
+const { regions } = require('../../roles.json')
 require('../utils/embedData.js')
 
 module.exports = {
