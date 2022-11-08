@@ -18,8 +18,6 @@ module.exports = {
         const channel = interaction.guild.channels.cache.get(userData.channelId);
         const content = interaction.message.embeds[0].description.split('\n')[2];
         const notesChannel = interaction.guild.channels.cache.find(c => c.name === "notes");
-        //await notesChannel.send(`.note <@${interaction.customId.split("-")[3]}> ${content}`);
-        //await notesChannel.send(`/notes user:@REEEEEEEboi#6089`);
 
         await channel.delete();
         await interaction.reply({ content: `Medlem godkänd. Skriv \`.note <@${member.id}> ${content}\` i <#${notesChannel.id}>`, ephemeral: true });
