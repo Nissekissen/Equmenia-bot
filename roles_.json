@@ -1,0 +1,13 @@
+{
+    "regions": [
+      {"label": "region_name", "value": "role_id", "description": "Something interesting."}
+        ],
+    "games": [
+      {"label": "game_name", "value": "role_id", "description": "Something interesting."}
+    ],
+    "pronouns": [
+      {"label": "pronoun_name", "value": "role_id", "description": "Something interesting."}
+    ],
+    "lärjungar": "member_role_name",
+    "modchannel": "use /setchannel to configure this."
+  }
