@@ -1,5 +1,11 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { modchannel } = require('../../roles.json')
+const { modchannel } = require('../../roles.json');
+
+const formRewriteIntro = require('../buttons/form-rewrite-intro');
+const formSubmit = require('../buttons/form-submit');
+const formDeny = require('../buttons/form-deny');
+const formAccept = require('../buttons/form-accept')
+
 require('../utils/embedData')
 
 module.exports = {
@@ -11,16 +17,7 @@ module.exports = {
             .setThumbnail(interaction.member.user.displayAvatarURL({ dynamic: true }))
         embed.addData(embed, true);
         const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId(`form-deny-${channel.id}-${interaction.member.id}-${message.id}`)
-                    .setLabel('Avböj')
-                    .setStyle(ButtonStyle.Danger),
-                new ButtonBuilder()
-                    .setCustomId(`form-accept-${channel.id}-${interaction.member.id}-${message.id}`)
-                    .setLabel('Godkänn')
-                    .setStyle(ButtonStyle.Success)
-            )
+            .addComponents(formDeny.builder, formAccept.builder)
         
         await modChannel.send({ embeds: [embed], components: [row] });
         
@@ -28,7 +25,7 @@ module.exports = {
             .setTitle('Formulär mottaget')
             .setDescription('Ditt formulär har nu blivit mottaget och du kommer så snart som möjligt bli insläppt till servern. Om du har ytterligare frågor kan du skicka ett meddelande till någon av våra aktiva ledare, så hjälper dem dig.')
         replyEmbed.addData(replyEmbed)
-
-        await interaction.reply({embeds: [replyEmbed]});
+        await interaction.update({ components: [new ActionRowBuilder().setComponents(formRewriteIntro.builder.setDisabled(true), formSubmit.builder.setDisabled(true))] })
+        await interaction.channel.send({embeds: [replyEmbed]});
     }
 }
