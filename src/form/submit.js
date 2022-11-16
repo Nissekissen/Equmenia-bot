@@ -17,7 +17,7 @@ module.exports = {
             .setThumbnail(interaction.member.user.displayAvatarURL({ dynamic: true }))
         embed.addData(embed, true);
         const row = new ActionRowBuilder()
-            .addComponents(formDeny.builder, formAccept.builder)
+            .addComponents(formDeny.builder.setDisabled(false), formAccept.builder.setDisabled(false))
         
         await modChannel.send({ embeds: [embed], components: [row] });
         

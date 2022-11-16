@@ -5,7 +5,8 @@ module.exports = {
     builder: new ButtonBuilder()
         .setLabel('Avbryt')
         .setStyle(ButtonStyle.Danger)
-        .setCustomId('form-cancel'),
+        .setCustomId('form-cancel')
+        .setDisabled(false),
     async execute(interaction) {
         const channel = interaction.channel;
         await channel.delete();
