@@ -62,6 +62,15 @@ Copy or Rename `config_.json` to config.json and fillout the values:
 ```
 
 
+
+If you want to use the forms function, you need to create a `channels.json` file with the content:
+
+```json
+{"channels": []}
+```
+
+And rename the `roles_.json` file to `roles.json` and fill out the placeholders.
+
 ## Built With
 
   

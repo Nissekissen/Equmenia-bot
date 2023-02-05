@@ -1,5 +1,7 @@
 const fs = require('fs')
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityType } = require('discord.js')
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ActivityType } = require('discord.js');
+const formRewriteIntro = require('../buttons/form-rewrite-intro');
+const formSubmit = require('../buttons/form-submit');
 
 module.exports = {
     name: 'messageCreate',
@@ -12,14 +14,8 @@ module.exports = {
                 if (interaction.member.id == channel.userId && channel.intro) {
                     const next = new ActionRowBuilder()
                         .addComponents(
-                            new ButtonBuilder()
-                                .setCustomId(`form-rewrite-intro-${interaction.channelId}-${interaction.id}`)
-                                .setLabel('Skriv om')
-                                .setStyle(ButtonStyle.Danger),
-                            new ButtonBuilder()
-                                .setCustomId(`form-submit-${interaction.channelId}-${interaction.id}`)
-                                .setLabel('Skicka')
-                                .setStyle(ButtonStyle.Success)
+                            formRewriteIntro.builder.setDisabled(false),
+                            formSubmit.builder.setDisabled(false)
                         )
                     await interaction.channel.send({ components: [next] });
                     returnChannels.channels.find(v => v.channelId == channel.channelId).intro = false;

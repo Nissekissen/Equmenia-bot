@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
 const fs = require('fs')
+const formCancel = require("../buttons/form-cancel")
 require('../utils/embedData')
 module.exports = {
     execute: async (interaction, channel) => {
@@ -9,10 +10,7 @@ module.exports = {
         embed.addData(embed);
         const row = new ActionRowBuilder()
             .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('form-cancel-'+channel.id)
-                    .setLabel('Avbryt')
-                    .setStyle(ButtonStyle.Danger)
+                formCancel.builder
             )
 
         const data = JSON.parse(fs.readFileSync('./channels.json'));

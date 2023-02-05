@@ -1,6 +1,8 @@
 const { ButtonBuilder } = require("@discordjs/builders");
 const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, IntegrationApplication, ButtonStyle } = require("discord.js");
-const fs = require('fs')
+const fs = require('fs');
+const formCancel = require("../buttons/form-cancel.js");
+const formNext = require("../buttons/form-next.js");
 require('../utils/embedData.js')
 
 module.exports = {
@@ -12,14 +14,8 @@ module.exports = {
 
         const row = new ActionRowBuilder()
             .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('form-cancel-'+channel.id)
-                    .setLabel('Avbryt')
-                    .setStyle(ButtonStyle.Danger),
-                new ButtonBuilder()
-                    .setCustomId('form-start-'+channel.id)
-                    .setLabel('Börja')
-                    .setStyle(ButtonStyle.Success),
+                formCancel.builder,
+                formNext.builder,
                 
             );
         
@@ -29,7 +25,8 @@ module.exports = {
             channelId: channel.id,
             userId: member.id,
             username: member.user.tag,
-            intro: false
+            intro: false,
+            currentForm: 'start'
         }
         activeChannels.channels.push(userData);
         fs.writeFileSync('./channels.json', JSON.stringify(activeChannels))
