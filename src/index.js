@@ -6,7 +6,7 @@ const axios = require('axios');
 const { logToFile } = require('./utils/consoleLogging');
 
 const client = new Client({
-	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages],
+	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates],
 	presence: {
 		status: 'online',
 		activities: [{

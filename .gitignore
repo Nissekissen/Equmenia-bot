@@ -9,3 +9,6 @@ logger
 roles.json
 channels.json
 .vscode/settings.json
+tests
+recordings
+*.mp3
