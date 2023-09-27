@@ -1,10 +1,9 @@
 messages
 node_modules
 config.json
-logger/index.html
-logger/main.css
-logger/script.js
+logger/
 logger
 roles.json
 channels.json
 .vscode/settings.json
+tests/

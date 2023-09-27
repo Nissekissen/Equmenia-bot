@@ -9,7 +9,7 @@ module.exports = {
         logger.log("Bot is ready!");
         client.user.setPresence({
             activities: [
-                { name: "Bible: Audio Book", type: ActivityType.Listening },
+                { name: "Bible: The Movie", type: ActivityType.Watching },
             ],
             status: "online",
         });

@@ -15,10 +15,10 @@ module.exports = {
                 await command.execute(interaction);
                 logger.log(`${interaction.member.user.username} ran the command ${command.data.name}`)
             } catch (error) {
-                await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
                 logger.log(error);
+                await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
             }
-        } else if (interaction.type === InteractionType.MessageComponent) {
+        } else if (interaction.type === InteractionType.MessageComponent || interaction.type === InteractionType.ModalSubmit) {
 
             // Reaction roles
             if (!isNaN(interaction.customId)) {
@@ -43,12 +43,20 @@ module.exports = {
                 return
             }
 
+            console.log(interaction.customId);
+
             // Other buttons or select menus.
             const buttonFiles = fs.readdirSync('./src/buttons').filter(file => file.endsWith('js'))
             for (const file of buttonFiles) {
                 const buttonData = require(`../buttons/${file}`)
+                console.log(buttonData);
+                if (!buttonData.builder) continue;
                 if (interaction.customId.startsWith(buttonData.builder.data.custom_id)) {
                     logger.log(`${interaction.member.user.username} used the message component ${buttonData.builder.data.custom_id}.`)
+                    if (!buttonData.execute) {
+                        const executeData = require(`../buttons/${buttonData.executePath}`);
+                        return await executeData.execute(interaction);
+                    }
                     return await buttonData.execute(interaction);
                 }
             }

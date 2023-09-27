@@ -25,10 +25,12 @@ module.exports = {
             channelId: channel.id,
             userId: member.id,
             username: member.user.tag,
-            intro: false,
-            currentForm: 'start'
+            sectionId: 0
         }
         activeChannels.channels.push(userData);
+
+        console.log(row)
+
         fs.writeFileSync('./channels.json', JSON.stringify(activeChannels))
         await channel.send({embeds: [embed], components: [row]});
     }

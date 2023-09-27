@@ -11,22 +11,21 @@ const {
 const fs = require("fs");
 const { sections } = require("../../forms.json");
 const openModal = require("./open-modal");
-
+const formNext = require("./form-next");
 const formCancel = require("./form-cancel");
-
 require("../utils/embedData");
 
 module.exports = {
     builder: new ButtonBuilder()
-        .setLabel("Nästa")
-        .setStyle(ButtonStyle.Primary)
-        .setCustomId("form-next"),
+        .setLabel("Föregående")
+        .setStyle(ButtonStyle.Secondary)
+        .setCustomId("form-back"),
     async execute(interaction) {
         const activeChannels = JSON.parse(fs.readFileSync("./channels.json"));
         const nextFormId =
             activeChannels.channels.find(
                 (data) => data.channelId === interaction.channel.id
-            ).sectionId + 1;
+            ).sectionId - 1;
         const nextForm = sections.find((obj) => obj.id === nextFormId);
 
         const embed = new EmbedBuilder()
@@ -34,13 +33,16 @@ module.exports = {
             .setDescription(nextForm.text);
         addData(embed);
 
+        const nextBtn = ButtonBuilder.from(formNext.builder.toJSON());
+        const cancelBtn = ButtonBuilder.from(formCancel.builder.toJSON());
+
         const actionRow = new ActionRowBuilder();
         const btnRow = new ActionRowBuilder().addComponents(
-            interaction.message.components[interaction.message.components.length-2].components[0],
-            this.builder
+            this.builder,
+            nextBtn
         );
         const cancelRow = new ActionRowBuilder().addComponents(
-            formCancel.builder
+            cancelBtn
         );
 
         if (nextForm.image != undefined) {
@@ -59,8 +61,6 @@ module.exports = {
             (data) => data.channelId === interaction.channel.id
         ).sectionId = nextFormId;
         fs.writeFileSync("./channels.json", JSON.stringify(activeChannels));
-
-        console.log(cancelRow);
 
         await interaction.update({
             embeds: [embed],

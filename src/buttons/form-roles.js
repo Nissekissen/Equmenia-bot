@@ -1,28 +1,43 @@
-const { ButtonBuilder, ButtonStyle, EmbedBuilder, ActionRowBuilder, SelectMenuBuilder } = require("discord.js");
-const fs = require('fs');
+const {
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder,
+    ActionRowBuilder,
+    SelectMenuBuilder,
+} = require("discord.js");
+const fs = require("fs");
+
+const roles = require("../../roles.json");
 
 module.exports = {
     builder: new SelectMenuBuilder()
-        .setCustomId('form-roles')
-        .setPlaceholder('Inget valt.'),
+        .setCustomId("roles_select")
+        .setPlaceholder("Inget valt."),
     async execute(interaction) {
-        interaction.component.options.forEach(async option => {
-            if (!isNaN(option.value)) {
-                const role = interaction.message.guild.roles.cache.find(r => r.id == option.value);
-                if (role != undefined && interaction.values.findIndex(v => v == role.id) == -1) {
-                    await interaction.member.roles.remove(role);
-                }
-            }
-        })
-        interaction.values.forEach(async value => {
-            if (!isNaN(value)) {
-                const role = interaction.message.guild.roles.cache.find(r => r.id === value)
-                if (role != undefined) {
-                    await interaction.member.roles.add(role)
-                }
-            }
-        })
+        // Clear all available roles
+        for (const option of interaction.component.options) {
+
+            const category = interaction.customId.split("-")[1];
+            const roleId = roles[category][option.value];
+            const role = await interaction.guild.roles.fetch(roleId);
+
+            if (!role) continue;
+
+            await interaction.member.roles.remove(role);
+        }
+
+        // Add all the roles that were selected
+        for (const value of interaction.values) {
+
+            const category = interaction.customId.split("-")[1];
+            const roleId = roles[category][value.value];
+            const role = await interaction.guild.roles.fetch(roleId);
+            
+            if (!role) continue;
+
+            await interaction.member.roles.add(role);
+        }
 
         await interaction.deferUpdate();
-    }
-}
+    },
+};

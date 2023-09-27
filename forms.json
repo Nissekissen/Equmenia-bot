@@ -1,0 +1,231 @@
+{
+    "sections": [
+        {
+            "id": 0,
+            "name": "intro",
+            "title": "Välkommen till Equmenia Gaming!",
+            "text": "Varmt välkommen till Equmenia Gamings discordserver. Här kommer ett kort litet formulär för att få tillgång till servern. Detta är för att vi ska kunna skapa en säker miljö för alla våra medlemmar. Hoppas att du ska trivas med oss och hör gärna av dig till oss om du har några frågor!",
+            "type": "text"
+        },
+        {
+            "id": 1,
+            "name": "region",
+            "title": "Välj region",
+            "text": "Välj vilken/vilka regioner du tillhör. Detta kan vara antingen vilken region du bor i eller vilken region kyrkan ligger i.",
+            "image": {
+                "url": "https://equmeniakyrkan.se/wp-content/uploads/2019/12/RegionerKarta-267x640.png"
+            },
+            "type": "select",
+            "menu": {
+                "type": 3,
+                "custom_id": "roles_select-regions",
+                "options": [
+                    {
+                        "label": "Nord",
+                        "value": "nord",
+                        "description": "Välj om du bor i region nord."
+                    },
+                    {
+                        "label": "Syd",
+                        "value": "syd",
+                        "description": "Välj om du bor i region syd."
+                    },
+                    {
+                        "label": "Väst",
+                        "value": "väst",
+                        "description": "Välj om du bor i region väst."
+                    },
+                    {
+                        "label": "Öst",
+                        "value": "öst",
+                        "description": "Välj om du bor i region öst."
+                    },
+                    {
+                        "label": "Mitt",
+                        "value": "Mitt",
+                        "description": "Välj om du bor i region mitt."
+                    },
+                    {
+                        "label": "Stockholm",
+                        "value": "sthlm",
+                        "description": "Välj om du bor i region Stockholm."
+                    },
+                    {
+                        "label": "Svealand",
+                        "value": "svea",
+                        "description": "Välj om du bor i region Svealand."
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "name": "pronouns",
+            "title": "Välj Pronomen",
+            "text": "Välj vilka pronomen du använder.",
+            "type": "select",
+            "menu": {
+                "type": 3,
+                "custom_id": "roles_select-pronouns",
+                "options": [
+                    {
+                        "label": "Han",
+                        "value": "han",
+                        "description": "Välj om du använder pronomet Han."
+                    },
+                    {
+                        "label": "Hon",
+                        "value": "hon",
+                        "description": "Välj om du använder pronomet Hon."
+                    },
+                    {
+                        "label": "Hen",
+                        "value": "hen",
+                        "description": "Välj om du använder pronomet Hen."
+                    },
+                    {
+                        "label": "Den",
+                        "value": "den",
+                        "description": "Välj om du använder pronomet Den."
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "name": "games",
+            "title": "Välj spel",
+            "text": "Välj vilka spel du brukar spela/är intresserad av.",
+            "type": "select",
+            "menu": {
+                "type": 3,
+                "custom_id": "roles_select-games",
+                "options": [
+                    {
+                        "label": "Minecraft",
+                        "value": "minecraft",
+                        "description": "Välj om du gillar att spela Minecraft."
+                    },
+                    {
+                        "label": "League of Legends",
+                        "value": "lol",
+                        "description": "Välj om du gillar att spela LoL."
+                    },
+                    {
+                        "label": "CSGO",
+                        "value": "csgo",
+                        "description": "Välj om du gillar att spela CSGO."
+                    },
+                    {
+                        "label": "Fortnite",
+                        "value": "fortnite",
+                        "description": "Välj om du gillar att spela Fortnite."
+                    },
+                    {
+                        "label": "Roblox",
+                        "value": "roblox",
+                        "description": "Välj om du gillar att spela Roblox."
+                    },
+                    {
+                        "label": "Among Us",
+                        "value": "amongus",
+                        "description": "Välj om du gillar att spela Among Us."
+                    },
+                    {
+                        "label": "PUBG",
+                        "value": "pubg",
+                        "description": "Välj om du gillar att spela PUBG."
+                    },
+                    {
+                        "label": "Apex Legends",
+                        "value": "apex",
+                        "description": "Välj om du gillar att spela Apgex Legends."
+                    },
+                    {
+                        "label": "Star Stable",
+                        "value": "starstable",
+                        "description": "Välj om du gillar att spela Star Stable."
+                    },
+                    {
+                        "label": "Valorant",
+                        "value": "valorant",
+                        "description": "Välj om du gillar att spela Valorant."
+                    }
+                ],
+                "min_values": 1,
+                "max_values": 10
+            }
+        },
+        {
+            "id": 4,
+            "name": "intro",
+            "title": "Berätta lite om dig själv",
+            "text": "Fyll i det följande formuläret med lite kortfattad info om dig själv. Detta är för att vi ska kunna skapa en säker miljö för alla våra medlemmar.",
+            "type": "modal",
+            "menu": {
+                "title": "Berätta lite om dig själv",
+                "custom_id": "intro_modal_submit",
+                "components": [
+                    {
+                        "type": 1,
+                        "components": [
+                            {
+                                "type": 4,
+                                "custom_id": "namn",
+                                "label": "Namn",
+                                "style": 1,
+                                "min_length": 1,
+                                "max_length": 50,
+                                "placeholder": "Fyll i ditt tilltalsnamn här",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "type": 1,
+                        "components": [
+                            {
+                                "type": 4,
+                                "custom_id": "ålder",
+                                "label": "Ålder",
+                                "style": 1,
+                                "min_length": 1,
+                                "max_length": 50,
+                                "placeholder": "Fyll i din ålder här",
+                                "required": true
+                            }
+                        ]
+                    },
+                    {
+                        "type": 1,
+                        "components": [
+                            {
+                                "type": 4,
+                                "custom_id": "förening",
+                                "label": "Förening",
+                                "style": 1,
+                                "min_length": 1,
+                                "max_length": 100,
+                                "placeholder": "Fyll i vilken förening du tillhör"
+                            }
+                        ]
+                    },
+                    {
+                        "type": 1,
+                        "components": [
+                            {
+                                "type": 4,
+                                "custom_id": "intressen",
+                                "label": "Intressen",
+                                "style": 2,
+                                "min_length": 1,
+                                "max_length": 2048,
+                                "placeholder": "Berätta lite om några intressen du har"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -8,12 +8,11 @@ module.exports = {
         .setName('bibelord')
         .setDescription('Visar dagens bibelord'),
     execute: async interaction => {
-        axios.get('https://www.bibeln.se/pren/syndikering.jsp')
-		.then((response) => {
-			let bibelordData = response.data.toString().split('<p>')[1]
+        const { data } = await axios.get('https://www.bibeln.se/pren/syndikering.jsp');
+		let bibelordData = data.toString().split('<p>')[1]
 			let bibelord = bibelordData.split('</p>')[0]
 			bibelord = bibelord.replace('<br/>', "\n")
-			let versData = response.data.toString().split('">')[2]
+			let versData = data.toString().split('">')[2]
 			let vers = versData.split('</a>')[0]
 			interaction.reply({ content: 'Här är dagens bibelord:',embeds: [
 				new EmbedBuilder()
@@ -24,6 +23,5 @@ module.exports = {
 					.setThumbnail('https://i.imgur.com/iUUOiu9.png')
 					.setTimestamp(Date.now())
 			], ephemeral: true })
-		})
     }
 }

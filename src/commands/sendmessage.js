@@ -25,7 +25,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle(interaction.options.getString('titel'))
             .setDescription(interaction.options.getString('innehåll'))
-        embed.addData(embed);
+        addData(embed);
         
         const row = new ActionRowBuilder()
             .addComponents(

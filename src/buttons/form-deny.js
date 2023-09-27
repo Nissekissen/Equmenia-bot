@@ -1,49 +1,67 @@
-const { ButtonBuilder, ButtonStyle, EmbedBuilder, ActionRowBuilder } = require("discord.js");
-const fs = require('fs');
+const {
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder,
+    ActionRowBuilder,
+} = require("discord.js");
+const fs = require("fs");
 const formAccept = require("./form-accept");
 
 module.exports = {
     builder: new ButtonBuilder()
-        .setLabel('Avböj')
-        .setCustomId('form-deny')
+        .setLabel("Avböj")
+        .setCustomId("form-deny")
         .setStyle(ButtonStyle.Danger)
         .setDisabled(false),
     async execute(interaction) {
-        const memberName = interaction.message.embeds[0].description.split('`')[1]
-        const member = interaction.guild.members.cache.find(user => user.username === memberName)
+        const channelData = JSON.parse(fs.readFileSync("./channels.json"));
 
-        const channelData = JSON.parse(fs.readFileSync('./channels.json'));
-        const userData = channelData.channels.findIndex(data => data.userId == member.id);
+        const memberId = interaction.customId.split("-")[2];
+        const member = await interaction.guild.members.fetch(memberId);
+        const memberData = channelData.channels.find(
+            (data) => data.userId == memberId
+        );
 
-        const channel = interaction.guild.channels.cache.get(userData.channelId);
+        const channel = await interaction.guild.channels.fetch(
+            memberData.channelId
+        );
 
-        await channel.delete();
-        await interaction.reply({ content: `Medlem avböjd, formulär borttaget.`, ephemeral: true })
-        const old_embed = interaction.message.embeds[0]
-        const new_embed = new EmbedBuilder()
-            .setTitle(old_embed.title)
-            .setDescription(old_embed.description)
-            .setFooter({ text: `Avböjt av ${interaction.member.user.username}` })
-            .setThumbnail(old_embed.thumbnail.url)
-        new_embed.addData(new_embed, true)
-        const row = new ActionRowBuilder()
-            .addComponents(
-                formAccept.builder.setDisabled(true),
-                this.builder.setDisabled(true)
-            )
+        const modEmbed = EmbedBuilder.from(
+            interaction.message.embeds[0].toJSON()
+        );
+        modEmbed.setFooter({ text: `Godkänt av ${interaction.user.username}` });
 
-        await interaction.message.edit({ embeds: [new_embed], components: [row] })
+        const modRow = new ActionRowBuilder().addComponents(
+            this.builder.setDisabled(true),
+            formAccept.builder.setDisabled(true)
+        );
 
-        const activeChannels = JSON.parse(fs.readFileSync('./channels.json'));
-        const index = activeChannels.channels.findIndex(channelData => channelData.channelId == channel.id);
-        activeChannels.channels.splice(index, 1);
-        fs.writeFileSync('./channels.json', JSON.stringify(activeChannels));
+        
+
+        const index = channelData.channels.findIndex(
+            (c) => c.channelId == channel.id
+        );
+        channelData.channels.splice(index, 1);
+        fs.writeFileSync("./channels.json", JSON.stringify(channelData));
 
         const embed = new EmbedBuilder()
-            .setTitle('Equmenia Gaming')
-            .setDescription('Ditt formulär har blivit nekat. Kontakta en ledare för mer information.')
-        embed.addData(embed)
+            .setTitle("Equmenia Gaming")
+            .setDescription(
+                "Ditt formulär har blivit nekat. Kontakta en ledare för mer information."
+            );
+        addData(embed);
         if (!member.dmChannel) await member.createDM();
-        await member.dmChannel.send({ embeds: [embed] })
-    }
-}
+        await member.dmChannel.send({ embeds: [embed] });
+
+        await interaction.message.edit({
+            embeds: [modEmbed],
+            components: [modRow],
+        });
+
+        await channel.delete();
+        await interaction.reply({
+            content: `Medlem avböjd, formulär borttaget.`,
+            ephemeral: true,
+        });
+    },
+};
