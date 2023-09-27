@@ -36,6 +36,10 @@ module.exports = {
                     value: interaction.fields.getField("ålder").value,
                 },
                 {
+                    name: "Förening: ",
+                    value: interaction.fields.getField("förening").value,
+                },
+                {
                     name: "Intressen: ",
                     value: interaction.fields.getField("intressen").value,
                 }
