@@ -52,7 +52,7 @@ module.exports = {
                 console.log(buttonData);
                 if (!buttonData.builder) continue;
                 if (interaction.customId.startsWith(buttonData.builder.data.custom_id)) {
-                    logger.log(`${interaction.member.user.username} used the message component ${buttonData.builder.data.custom_id}.`)
+                    logger.log(`${interaction.member.user.username} used the message component ${interaction.customId}.`)
                     if (!buttonData.execute) {
                         const executeData = require(`../buttons/${buttonData.executePath}`);
                         return await executeData.execute(interaction);

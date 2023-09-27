@@ -14,6 +14,9 @@ module.exports = {
         .setCustomId("roles_select")
         .setPlaceholder("Inget valt."),
     async execute(interaction) {
+        
+        await interaction.deferReply({ ephemeral: true });
+
         // Clear all available roles
         for (const option of interaction.component.options) {
 
@@ -30,16 +33,15 @@ module.exports = {
         for (const value of interaction.values) {
 
             const category = interaction.customId.split("-")[1];
-            const roleId = roles[category][value.value];
+            const roleId = roles[category][value];
             const role = await interaction.guild.roles.fetch(roleId);
-
-            console.log(role);
             
             if (!role) continue;
 
             await interaction.member.roles.add(role);
         }
 
-        await interaction.deferUpdate();
+        await interaction.editReply({ content: "Roller uppdaterade!", ephemeral: true})
     },
 };
+
