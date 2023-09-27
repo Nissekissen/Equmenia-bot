@@ -32,6 +32,8 @@ module.exports = {
             const category = interaction.customId.split("-")[1];
             const roleId = roles[category][value.value];
             const role = await interaction.guild.roles.fetch(roleId);
+
+            console.log(role);
             
             if (!role) continue;
 
