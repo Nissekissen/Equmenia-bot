@@ -13,7 +13,7 @@ const { sections } = require("../../forms.json");
 const openModal = require("./open-modal");
 const formNext = require("./form-next");
 const formCancel = require("./form-cancel");
-require("../utils/embedData");
+const addData = require("../utils/embedData");
 
 module.exports = {
     builder: new ButtonBuilder()

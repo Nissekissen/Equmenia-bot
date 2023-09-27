@@ -8,6 +8,7 @@ const fs = require("fs");
 const formDeny = require("./form-deny");
 
 const { lärjungar } = require("../../roles.json");
+const addData = require("../utils/embedData");
 
 module.exports = {
     builder: new ButtonBuilder()

@@ -14,7 +14,7 @@ const { lärjungar } = require("../../roles.json");
 const formCancel = require("./form-cancel");
 const formNext = require("./form-next");
 const formBack = require("./form-back");
-require("../utils/embedData");
+const addData = require("../utils/embedData");
 
 module.exports = {
     builder: new ButtonBuilder()

@@ -14,7 +14,7 @@ const openModal = require("./open-modal");
 
 const formCancel = require("./form-cancel");
 
-require("../utils/embedData");
+const addData = require("../utils/embedData");
 
 module.exports = {
     builder: new ButtonBuilder()

@@ -10,7 +10,7 @@ const fs = require("fs");
 const { modchannel } = require("../../roles.json");
 const formDeny = require("./form-deny");
 const formAccept = require("./form-accept");
-require("../utils/embedData");
+const addData = require("../utils/embedData");
 
 module.exports = {
     builder: new ButtonBuilder()

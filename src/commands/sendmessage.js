@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, ChannelType, IntegrationApplication, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-require('../utils/embedData')
+const addData = require('../utils/embedData')
 
 module.exports = {
     data: new SlashCommandBuilder()
