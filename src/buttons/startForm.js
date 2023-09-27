@@ -49,6 +49,12 @@ module.exports = {
                 break;
             }
         }
+
+        if (channel && isValid) {
+            await channel.delete();
+            channel = null;
+        }
+
         if (!channel && isValid) {
             channel = await category.children.create({
                 name: `${interaction.member.user.username}-${interaction.member.id}`,
