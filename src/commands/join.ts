@@ -1,7 +1,7 @@
 import { ChannelType, SlashCommandBuilder } from "discord.js";
 import { VoiceConnectionStatus, entersState, joinVoiceChannel } from "@discordjs/voice";
 import { setConnection } from "../voice/connectionManager";
-import type { Command } from "../types";
+import type { Command, CommandMeta } from "../types";
 
 export const data = new SlashCommandBuilder()
     .setName("join")
@@ -12,6 +12,11 @@ export const data = new SlashCommandBuilder()
             .setDescription("The stage channel to join (defaults to the one you're currently in)")
             .addChannelTypes(ChannelType.GuildStageVoice),
     );
+
+export const meta: CommandMeta = {
+    longDescription: "Join a stage channel for recording. Supply a stage channel to specify what channel to join, otherwise it defaults to the channel you are currenltly in.",
+    usage: "\`/join [channel]\`, where \`[channel]\` is optional.",
+}
 
 export const execute: Command["execute"] = async (interaction) => {
     if (!interaction.inCachedGuild()) {

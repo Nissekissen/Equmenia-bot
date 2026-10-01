@@ -1,10 +1,18 @@
-import { SlashCommandBuilder, time, hyperlink, EmbedBuilder } from "discord.js";
+import {
+    SlashCommandBuilder,
+    time,
+    hyperlink,
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+} from "discord.js";
 import { getConnection } from "../voice/connectionManager";
 import { startCapture, stopCapture } from "../voice/capture";
 import { getActiveSession, createSession, endSession, listSessions } from "../db/sessions";
 import { mixTracks } from "../voice/mixer";
 import { config } from "../config";
-import type { Command } from "../types";
+import type { Command, CommandMeta } from "../types";
 
 export const data = new SlashCommandBuilder()
     .setName("recording")
@@ -12,6 +20,11 @@ export const data = new SlashCommandBuilder()
     .addSubcommand((sub) => sub.setName("start").setDescription("Start recording the joined stage channel"))
     .addSubcommand((sub) => sub.setName("stop").setDescription("Stop recording and finalize the file"))
     .addSubcommand((sub) => sub.setName("list").setDescription("List past recordings for this server"));
+
+export const meta: CommandMeta = {
+    longDescription: "View, start or stop recordings. After a recording has been stopped, there will be a link where you can download the recording. Downloaded recordings will be deleted after 1 day and non-downloaded recordings will be deleted after 30 days. You can view recordings still in the database with `/recording list`.",
+    usage: "`/recording start|stop|list`. Use `/recording start` to start the recording and `/recording stop` to stop it. The bot needs to already be in the stage channel before you start the recording. see `/join`"
+}
 
 export const execute: Command["execute"] = async (interaction) => {
     const subcommand = interaction.options.getSubcommand();
@@ -80,8 +93,16 @@ export const execute: Command["execute"] = async (interaction) => {
 
                 const { outputPath, durationSeconds } = await mixTracks(session.id, tracks);
                 endSession(session.id, { status: "done", outputPath, durationSeconds });
+
+                const downloadButton = new ButtonBuilder()
+                    .setLabel("Download")
+                    .setStyle(ButtonStyle.Link)
+                    .setURL(`${config.publicBaseUrl}/recordings/${session.downloadToken}`);
+                const row = new ActionRowBuilder<ButtonBuilder>().addComponents(downloadButton);
+
                 await interaction.reply({
-                    content: `Recording stopped. Download: ${config.publicBaseUrl}/recordings/${session.downloadToken}`,
+                    content: "Recording stopped.",
+                    components: [row],
                     ephemeral: true,
                 });
             } catch (error) {

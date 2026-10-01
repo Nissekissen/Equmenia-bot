@@ -1,9 +1,14 @@
 import { SlashCommandBuilder } from "discord.js";
 import { getConnection, removeConnection } from "../voice/connectionManager";
 import { getActiveSession } from "../db/sessions";
-import type { Command } from "../types";
+import type { Command, CommandMeta } from "../types";
 
 export const data = new SlashCommandBuilder().setName("leave").setDescription("Leave the current channel");
+
+export const meta: CommandMeta = {
+    longDescription: "Make the bot leave the current channel. The bot cannot be recording when leaving.",
+    usage: "`/leave`"
+}
 
 export const execute: Command["execute"] = async (interaction) => {
     if (!interaction.inCachedGuild()) {

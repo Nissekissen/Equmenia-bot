@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits } from "discord.js";
 import { config } from "./config";
 import { loadEvents } from "./events";
 import { startServer } from "./http/server";
+import { startCleanupJob } from "./jobs/cleanup";
 
 async function main(): Promise<void> {
     const client = new Client({
@@ -11,6 +12,7 @@ async function main(): Promise<void> {
     loadEvents(client);
 
     await startServer();
+    startCleanupJob();
     await client.login(config.discordToken);
 }
 

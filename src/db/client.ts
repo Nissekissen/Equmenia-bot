@@ -15,6 +15,15 @@ db.exec(`
         status TEXT NOT NULL,
         output_path TEXT,
         duration_seconds INTEGER,
-        download_token TEXT NOT NULL UNIQUE
+        download_token TEXT NOT NULL UNIQUE,
+        downloaded_at INTEGER
     );
 `);
+
+try {
+    db.exec(`ALTER TABLE recording_sessions ADD COLUMN downloaded_at INTEGER`);
+} catch (error) {
+    if (!(error instanceof Error) || !error.message.includes("duplicate column name")) {
+        throw error;
+    }
+}

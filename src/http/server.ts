@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import Fastify, { type FastifyInstance } from "fastify";
 import { config } from "../config";
-import { getSessionByToken } from "../db/sessions";
+import { getSessionByToken, markDownloaded } from "../db/sessions";
 
 export function createServer(): FastifyInstance {
     const app = Fastify({ logger: false });
@@ -20,6 +20,9 @@ export function createServer(): FastifyInstance {
             if (!reply.sent) {
                 reply.code(404).send({ error: "Recording not found" });
             }
+        });
+        stream.on("end", () => {
+            markDownloaded(session.downloadToken);
         });
 
         reply.header("Content-Type", "audio/mpeg");

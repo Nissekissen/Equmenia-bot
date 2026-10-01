@@ -13,6 +13,7 @@ interface RecordingSessionRow {
     output_path: string | null;
     duration_seconds: number | null;
     download_token: string;
+    downloaded_at: number | null;
 }
 
 function rowToSession(row: RecordingSessionRow): RecordingSession {
@@ -27,8 +28,12 @@ function rowToSession(row: RecordingSessionRow): RecordingSession {
         outputPath: row.output_path,
         durationSeconds: row.duration_seconds,
         downloadToken: row.download_token,
+        downloadedAt: row.downloaded_at,
     };
 }
+
+export const DOWNLOAD_GRACE_PERIOD_MS = 24 * 60 * 60 * 1000;
+export const MAX_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
 const insertStatement = db.prepare(`
     INSERT INTO recording_sessions (id, guild_id, channel_id, started_by, started_at, status, download_token)
@@ -51,6 +56,7 @@ export function createSession(params: {
         outputPath: null,
         durationSeconds: null,
         downloadToken: crypto.randomBytes(32).toString("hex"),
+        downloadedAt: null,
     };
 
     insertStatement.run(session);
@@ -101,4 +107,38 @@ const getByTokenStatement = db.prepare(`
 export function getSessionByToken(token: string): RecordingSession | undefined {
     const row = getByTokenStatement.get(token) as RecordingSessionRow | undefined;
     return row ? rowToSession(row) : undefined;
+}
+
+const markDownloadedStatement = db.prepare(`
+    UPDATE recording_sessions
+    SET downloaded_at = @downloadedAt
+    WHERE download_token = @token AND downloaded_at IS NULL
+`);
+
+export function markDownloaded(token: string): void {
+    markDownloadedStatement.run({ token, downloadedAt: Date.now() });
+}
+
+const getExpiredSessionsStatement = db.prepare(`
+    SELECT * FROM recording_sessions
+    WHERE status = 'done'
+      AND (
+        (downloaded_at IS NOT NULL AND downloaded_at <= @downloadCutoff)
+        OR started_at <= @retentionCutoff
+      )
+`);
+
+export function getExpiredSessions(): RecordingSession[] {
+    const now = Date.now();
+    const rows = getExpiredSessionsStatement.all({
+        downloadCutoff: now - DOWNLOAD_GRACE_PERIOD_MS,
+        retentionCutoff: now - MAX_RETENTION_MS,
+    }) as RecordingSessionRow[];
+    return rows.map(rowToSession);
+}
+
+const deleteSessionStatement = db.prepare(`DELETE FROM recording_sessions WHERE id = ?`);
+
+export function deleteSession(id: string): void {
+    deleteSessionStatement.run(id);
 }
