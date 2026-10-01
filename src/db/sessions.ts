@@ -142,3 +142,13 @@ const deleteSessionStatement = db.prepare(`DELETE FROM recording_sessions WHERE 
 export function deleteSession(id: string): void {
     deleteSessionStatement.run(id);
 }
+
+const failStaleSessionsStatement = db.prepare(`
+    UPDATE recording_sessions
+    SET status = 'failed', ended_at = @endedAt
+    WHERE status = 'recording'
+`);
+
+export function failStaleSessions(): void {
+    failStaleSessionsStatement.run({ endedAt: Date.now() });
+}

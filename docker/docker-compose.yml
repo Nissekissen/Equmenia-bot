@@ -1,5 +1,6 @@
 services:
     bot:
+        container_name: equmenia-bot
         build:
             context: ..
             dockerfile: docker/Dockerfile
@@ -7,6 +8,10 @@ services:
             - ../.env
         volumes:
             - ../data:/app/data
-        ports:
-            - "3000:3000"
+        networks:
+            - web
         restart: unless-stopped
+
+networks:
+    web:
+        external: true

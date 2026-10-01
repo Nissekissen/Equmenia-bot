@@ -70,7 +70,7 @@ export async function postDailyVerse(client: Client): Promise<boolean> {
     }
 
     const today = new Intl.DateTimeFormat("sv-SE", { day: "numeric", month: "long", year: "numeric" }).format(new Date())
-    const content = `# Dagens bibelord ${today}\n\n${dailyVerse.content}\n- ${dailyVerse.verse}`
+    const content = `# Dagens bibelord ${today}\n\n${dailyVerse.content}\n\\- ${dailyVerse.verse}`
     const link = new ButtonBuilder()
         .setLabel("Läs vidare")
         .setStyle(ButtonStyle.Link)

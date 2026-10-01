@@ -1,6 +1,8 @@
 import { ChannelType, SlashCommandBuilder } from "discord.js";
 import { VoiceConnectionStatus, entersState, joinVoiceChannel } from "@discordjs/voice";
-import { setConnection } from "../voice/connectionManager";
+import { setConnection, removeConnection } from "../voice/connectionManager";
+import { getActiveSession, endSession } from "../db/sessions";
+import { stopCapture } from "../voice/capture";
 import type { Command, CommandMeta } from "../types";
 
 export const data = new SlashCommandBuilder()
@@ -55,6 +57,35 @@ export const execute: Command["execute"] = async (interaction) => {
         return;
     }
 
-    setConnection(channel.guild.id, connection);
+    const guildId = channel.guild.id;
+
+    // Transient network blips also land here as "Disconnected" — race entering either
+    // Signalling or Connecting against a timeout to tell a real drop (channel deleted,
+    // bot kicked, etc.) apart from one @discordjs/voice will recover from on its own.
+    connection.on(VoiceConnectionStatus.Disconnected, async () => {
+        try {
+            await Promise.race([
+                entersState(connection, VoiceConnectionStatus.Signalling, 5_000),
+                entersState(connection, VoiceConnectionStatus.Connecting, 5_000),
+            ]);
+        } catch {
+            connection.destroy();
+        }
+    });
+
+    connection.on(VoiceConnectionStatus.Destroyed, () => {
+        removeConnection(guildId);
+
+        const session = getActiveSession(guildId);
+        if (!session) return;
+
+        stopCapture(guildId)
+            .catch(() => undefined)
+            .finally(() => {
+                endSession(session.id, { status: "failed", outputPath: null, durationSeconds: null });
+            });
+    });
+
+    setConnection(guildId, connection);
     await interaction.reply({ content: `Joined the channel <#${channel.id}>`, ephemeral: true });
 };
