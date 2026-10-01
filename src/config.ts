@@ -7,7 +7,6 @@ const envSchema = z.object({
     DISCORD_TOKEN: z.string().min(1, "DISCORD_TOKEN is required"),
     DISCORD_CLIENT_ID: z.string().min(1, "DISCORD_CLIENT_ID is required"),
     DISCORD_DEV_GUILD_ID: z.string().optional(),
-    ALLOWED_ROLE_IDS: z.string().default(""),
     DATA_DIR: z.string().default("./data"),
     HTTP_PORT: z.coerce.number().default(3000),
     PUBLIC_BASE_URL: z.string().default("http://localhost:3000"),
@@ -31,9 +30,6 @@ export const config = {
     discordToken: env.DISCORD_TOKEN,
     discordClientId: env.DISCORD_CLIENT_ID,
     discordDevGuildId: env.DISCORD_DEV_GUILD_ID,
-    allowedRoleIds: env.ALLOWED_ROLE_IDS.split(",")
-        .map((id) => id.trim())
-        .filter(Boolean),
     dataDir,
     recordingsDir,
     sqlitePath: path.join(dataDir, "sqlite.db"),
