@@ -3,6 +3,7 @@ import { config } from "./config";
 import { loadEvents } from "./events";
 import { startServer } from "./http/server";
 import { startCleanupJob } from "./jobs/cleanup";
+import { startDailyVerseJob } from "./jobs/dailyVerse";
 
 async function main(): Promise<void> {
     const client = new Client({
@@ -13,6 +14,7 @@ async function main(): Promise<void> {
 
     await startServer();
     startCleanupJob();
+    startDailyVerseJob(client);
     await client.login(config.discordToken);
 }
 

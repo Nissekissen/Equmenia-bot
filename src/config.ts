@@ -11,6 +11,8 @@ const envSchema = z.object({
     DATA_DIR: z.string().default("./data"),
     HTTP_PORT: z.coerce.number().default(3000),
     PUBLIC_BASE_URL: z.string().default("http://localhost:3000"),
+    DAILY_VERSE_URL: z.string().default("https://www.bibeln.se/pren/syndikering.jsp"),
+    DAILY_VERSE_CHANNEL_ID: z.string().min(1, "DAILY_VERSE_CHANNEL_ID is required"),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -37,6 +39,8 @@ export const config = {
     sqlitePath: path.join(dataDir, "sqlite.db"),
     httpPort: env.HTTP_PORT,
     publicBaseUrl: env.PUBLIC_BASE_URL,
+    dailyVerseUrl: env.DAILY_VERSE_URL,
+    dailyVerseChannelId: env.DAILY_VERSE_CHANNEL_ID,
 };
 
 fs.mkdirSync(config.recordingsDir, { recursive: true });
