@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { getConnection, removeConnection } from "../voice/connectionManager";
+import { getActiveSession } from "../db/sessions";
 import type { Command } from "../types";
 
 export const data = new SlashCommandBuilder().setName("leave").setDescription("Leave the current channel");
@@ -13,6 +14,14 @@ export const execute: Command["execute"] = async (interaction) => {
     const connection = getConnection(interaction.guildId);
     if (!connection) {
         await interaction.reply({ content: "I'm not connected to a voice channel.", ephemeral: true });
+        return;
+    }
+
+    if (getActiveSession(interaction.guildId)) {
+        await interaction.reply({
+            content: "A recording is in progress. Stop it first with /recording stop.",
+            ephemeral: true,
+        });
         return;
     }
 

@@ -23,7 +23,7 @@ interface SessionCapture {
 const activeCaptures = new Map<string, SessionCapture>();
 
 // 48000 Hz, stereo, 16-bit signed PCM.
-const BYTES_PER_MS = 192;
+export const BYTES_PER_MS = 192;
 
 export function startCapture(guildId: string, connection: VoiceConnection, sessionId: string): void {
     const dir = path.join(config.recordingsDir, sessionId);

@@ -9,9 +9,8 @@ export const data = new SlashCommandBuilder()
     .addChannelOption((option) =>
         option
             .setName("channel")
-            .setDescription("The stage channel to join")
-            .addChannelTypes(ChannelType.GuildStageVoice)
-            .setRequired(true),
+            .setDescription("The stage channel to join (defaults to the one you're currently in)")
+            .addChannelTypes(ChannelType.GuildStageVoice),
     );
 
 export const execute: Command["execute"] = async (interaction) => {
@@ -20,9 +19,16 @@ export const execute: Command["execute"] = async (interaction) => {
         return;
     }
 
-    const channel = interaction.options.getChannel("channel");
+    const channelOption = interaction.options.getChannel("channel");
+    const channel = channelOption ?? interaction.member.voice.channel;
+
     if (!channel || channel.type !== ChannelType.GuildStageVoice) {
-        await interaction.reply({ content: "That channel is not a stage channel.", ephemeral: true });
+        await interaction.reply({
+            content: channelOption
+                ? "That channel is not a stage channel."
+                : "You're not in a stage channel. Join one first, or pass a channel to /join.",
+            ephemeral: true,
+        });
         return;
     }
 
