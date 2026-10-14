@@ -95,6 +95,26 @@ export function importDoneSession(params: {
     return session;
 }
 
+const repairStatement = db.prepare(`
+    UPDATE recording_sessions
+    SET status = 'done', output_path = @outputPath, duration_seconds = @durationSeconds,
+        ended_at = COALESCE(ended_at, @endedAt)
+    WHERE id = @id
+`);
+
+// Marks an existing session as done and points it at its file. Keeps the
+// original download token so any link already handed out stays valid.
+export function repairSession(
+    id: string,
+    result: { outputPath: string; durationSeconds: number; endedAt: number },
+): RecordingSession | undefined {
+    repairStatement.run({ id, ...result });
+    const row = db.prepare(`SELECT * FROM recording_sessions WHERE id = ?`).get(id) as
+        | RecordingSessionRow
+        | undefined;
+    return row ? rowToSession(row) : undefined;
+}
+
 const endStatement = db.prepare(`
     UPDATE recording_sessions
     SET ended_at = @endedAt, status = @status, output_path = @outputPath, duration_seconds = @durationSeconds

@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import ffmpegPath from "ffmpeg-static";
 import { config } from "../config";
-import { importDoneSession } from "../db/sessions";
+import { importDoneSession, repairSession } from "../db/sessions";
 import { db } from "../db/client";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -41,13 +41,25 @@ async function main(): Promise<void> {
     const stat = fs.statSync(filePath);
     const durationSeconds = await getDurationSeconds(filePath);
 
+    const baseName = path.basename(filePath, path.extname(filePath));
+
+    // The stop flow names files after the session id, so a row for this file usually
+    // exists already (marked failed by the reply-timeout bug). Repair it in place.
+    if (UUID_PATTERN.test(baseName)) {
+        const repaired = repairSession(baseName, { outputPath: filePath, durationSeconds, endedAt: stat.mtimeMs });
+        if (repaired) {
+            console.log(`Repaired existing session ${repaired.id} (${durationSeconds}s)`);
+            console.log(`${config.publicBaseUrl}/recordings/${repaired.downloadToken}`);
+            return;
+        }
+    }
+
     const existing = db.prepare(`SELECT id FROM recording_sessions WHERE output_path = ?`).get(filePath);
     if (existing) {
         console.error(`${filePath} is already registered.`);
         process.exit(1);
     }
 
-    const baseName = path.basename(filePath, path.extname(filePath));
     const session = importDoneSession({
         id: UUID_PATTERN.test(baseName) ? baseName : crypto.randomUUID(),
         guildId,
