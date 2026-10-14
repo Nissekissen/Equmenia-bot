@@ -63,6 +63,38 @@ export function createSession(params: {
     return session;
 }
 
+const insertDoneStatement = db.prepare(`
+    INSERT INTO recording_sessions (
+        id, guild_id, channel_id, started_by, started_at, ended_at, status, output_path, duration_seconds, download_token
+    )
+    VALUES (
+        @id, @guildId, @channelId, @startedBy, @startedAt, @endedAt, @status, @outputPath, @durationSeconds, @downloadToken
+    )
+`);
+
+// Registers an already-finished recording file (e.g. one orphaned by a failed
+// stop) so it shows up in /recordings list and can be downloaded.
+export function importDoneSession(params: {
+    id: string;
+    guildId: string;
+    channelId: string;
+    startedBy: string;
+    startedAt: number;
+    durationSeconds: number;
+    outputPath: string;
+}): RecordingSession {
+    const session: RecordingSession = {
+        ...params,
+        endedAt: params.startedAt + params.durationSeconds * 1000,
+        status: "done",
+        downloadToken: crypto.randomBytes(32).toString("hex"),
+        downloadedAt: null,
+    };
+
+    insertDoneStatement.run(session);
+    return session;
+}
+
 const endStatement = db.prepare(`
     UPDATE recording_sessions
     SET ended_at = @endedAt, status = @status, output_path = @outputPath, duration_seconds = @durationSeconds
